@@ -1,0 +1,68 @@
+<html>
+<head>
+  <title>botsilo</title>
+  <script src="../src/mqttws31.js"></script>
+  <script src="../src/botsilo.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://unpkg.com/vue"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/prompt.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body onclick="app.focus()">
+
+  <div style="position"
+
+  <div id="app">
+    <div v-if="online">
+
+        <!-- History -->
+        <div v-for="(line, id) in lines">
+          <span style="line-height:20px;">
+
+              <!-- TIME -->
+              <span v-if="line.time" v-bind:style="{color: timeColor}">{{line.time}}</span>
+              <!-- FROM -->
+              <span v-if="line.from">@{{line.from}}:</span>
+              <!-- TEXT -->
+              <span v-bind:style="{color: line.color ||  color}">{{line.text}}</span>
+              <!-- IMAGE -->
+              <div v-if="line.image">
+                <br>
+                <md-layout md-gutter>
+                  <md-card md-with-hover>
+                    <img style="width:500px;background-color:white;" v-bind:src="line.image">
+                  </md-card>
+                </md-layout>
+                <br>
+              </div>
+        </div>
+
+        <!-- MAIN PROMPT -->
+        <form v-on:submit="enterCommand">
+          <span style="line-height:20px;">{{prompt}} <nobr><input id="input" type="text" v-model="command" id="prompt" autofocus autocomplete="off"></nobr></span><br>
+        </form>
+    </div>
+    <!-- BOT IS OFFLINE -->
+    <div v-else>
+        <div v-if="id == ''">
+          <!-- ENTER USERNAME -->
+          <form v-on:submit="enterUsername">
+            <span style="line-height:20px;overflow: hidden;white-space: nowrap;">{{prompt}} <input id="input" type="text" v-model="command" id="prompt" autofocus autocomplete="off"></span><br>
+          </form>
+        </div>
+        <div v-else>
+          <!-- ENTER PASSWORD -->
+          <form v-on:submit="enterPassword">
+            <span style="line-height:20px;overflow: hidden;white-space: nowrap;">{{prompt}} <input id="input" type="password" v-model="command" id="prompt" autofocus autocomplete="off"></span><br>
+          </form>
+        </div>
+    </div>
+  </div>
+
+  <script src="js/helpers.js"></script>
+  <script src="js/colors.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

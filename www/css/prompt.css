@@ -1,0 +1,55 @@
+
+body {
+
+}
+
+.has-ripple {
+  margin-bottom: 16px;
+  padding: 20px;
+  display: inline-block;
+  position: relative;
+}
+
+
+* {
+  font-family: 'Roboto Mono';
+  font-size:12px;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+input {
+  width: 90%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: none;
+  border-width: 0px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin:0;
+  overflow-x: visible;
+  background-color: transparent;
+}
+
+span {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+
+video {
+	width:100%;
+	background-color: black;
+}
+
+aside {
+	width: 30vw;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
