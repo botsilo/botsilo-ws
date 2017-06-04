@@ -8,7 +8,7 @@
  * @param  {Function} on_disconnect description
  * @param  {Function} on_message    description
  */
-function Bot(botId, secret, on_connect, on_disconnect, on_message) {
+function Bot(host, port, botId, secret, on_connect, on_disconnect, on_message) {
   var botId = botId;
   var secret = secret;
   var on_disconnect = on_disconnect;
@@ -21,7 +21,7 @@ function Bot(botId, secret, on_connect, on_disconnect, on_message) {
   var mqttStart = function() {
     // Create a client instance
     //client = new Paho.MQTT.Client("54.243.3.185", 1883, botId);
-    client = new Paho.MQTT.Client("localhost", 3883, botId);
+    client = new Paho.MQTT.Client(host, port, botId);
 
     // set callback handlers
     client.onConnectionLost = onConnectionLost;

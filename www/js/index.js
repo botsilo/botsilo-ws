@@ -50,6 +50,8 @@ function onMessage(from, payload) {
 var app = new Vue({
   el: '#app',
   data: {
+    host: 'localhost',
+    port: 3883,
     id: '',
     sk: '',
     online: false,
@@ -91,7 +93,7 @@ var app = new Vue({
       var sk = app.command;
       app.command = "";
       app.prompt = "";
-      bot = new Bot(app.id.trim(), sk.trim(), onConnect, onDisconnect, onMessage);
+      bot = new Bot(app.host, app.port, app.id.trim(), sk.trim(), onConnect, onDisconnect, onMessage);
       bot.start();
     },
     enterCommand: (e) => {
@@ -170,6 +172,14 @@ var app = new Vue({
     }
   }
 });
+
+
+var host = getParameterByName('host');
+var port = getParameterByName('port');
+
+if (host) app.host = host;
+if (port) app.port = parseInt(port);
+
 
 function checkKey(e) {
   if (!app.online) return;
