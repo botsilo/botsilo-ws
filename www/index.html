@@ -5,13 +5,20 @@
   <script src="../src/botsilo.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://unpkg.com/vue"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+  <script src="js/colors.js"></script>
+  <script src="js/triplesec-3.0.14-min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/prompt.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body onclick="app.focus()">
 
+  <div id="logo">
+    <span onclick="">BOTSILO</span>
+  </div>
 
   <div id="app">
     <div v-if="online">
@@ -61,7 +68,7 @@
   </div>
 
   <script src="js/helpers.js"></script>
-  <script src="js/colors.js"></script>
+  <script src="js/crypt.js"></script>
   <script src="js/index.js"></script>
 </body>
 </html>

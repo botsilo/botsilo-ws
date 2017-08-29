@@ -1,0 +1,27 @@
+
+<html>
+<head>
+  <title>botsilo</title>
+  <script src="../src/mqttws31.js"></script>
+  <script src="../src/botsilo.js"></script>
+  <script src="js/colors.js"></script>
+  <script src="js/triplesec-3.0.14-min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+  <div id="logo">
+    <span onclick="">BOTSILO</span>
+  </div>
+
+<pre>
+curl -H "Content-Type: application/json" \
+     -X POST \
+     -d '{"id": "{{id}}", "sk": "{{sk}}"}' \
+     http://localhost:3001/signup
+</pre>
+</body>
+</html>

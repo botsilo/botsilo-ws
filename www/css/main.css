@@ -4,6 +4,22 @@ body {
   font-weight: 100;
   background-color: black;
   color: white;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  /* Gradient
+  background: -webkit-linear-gradient(left top, black, #FF5722);
+  background: -o-linear-gradient(bottom right, black, #FF5722);
+  background: -moz-linear-gradient(bottom right, black, #FF5722);
+  background: linear-gradient(to bottom right, black, #FF5722);
+  */
+}
+
+#logo {
+  position: fixed;
+  bottom:10px;
+  right:10px;
+  color: #607D8B;
+  font-size: 12px;
 }
 
 #input {

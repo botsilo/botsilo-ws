@@ -5,9 +5,13 @@
  // our bot variable
 var bot;
 
+// hold encryption, decryption keys
+var decMap = {};
+var encMap = {};
+
 function onConnect() {
   app.online = true;
-  app.println('Connected!');
+  app.println(`Connected as ${app.id}! ${moment().format("H:mm:ss")}`, false, BLUE);
   app.prompt = ">>> ";
   app.focus();
   document.onkeydown = checkKey;
@@ -18,12 +22,24 @@ function onDisconnect() {
   app.id = "";
   app.prompt = "id: ";
   app.lines = [];
+  app.focus();
 }
 
 function onMessage(from, payload) {
 
   if (typeof payload === 'string' || payload instanceof String) {
-    return app.println(payload, from);
+
+    if (from in decMap) {
+      decrypt(decMap[from], payload).then(plaintext => {
+        app.println(plaintext, from, false, true);
+      }).catch(err => {
+        app.println(`(${err.message})`, from, RED, true);
+      });
+      return;
+    } else {
+      app.println(payload, from, false, true);
+    }
+    return;
   }
 
   if ('error' in payload) {
@@ -42,9 +58,16 @@ function onMessage(from, payload) {
   } else if ('message' in payload) {
     if (from == 'server') app.println(payload['message'], false, GREEN);
     else app.println(payload['message']);
+
+  } else if ('png' in payload) {
+    var data = payload['png'];
+    app.lines.push({from: from, image: payload['png'], time: moment().format("H:mm:ss")});
+
   } else {
     console.log('what');
   }
+
+  app.scrollDown();
 }
 
 var app = new Vue({
@@ -62,7 +85,8 @@ var app = new Vue({
     history: [],
     historyIndex: -1,
     bgColor: BLACK,
-    color: WHITE
+    color: WHITE,
+    timeColor: BLUEGREY,
   },
   methods: {
     reset: () => {
@@ -115,7 +139,7 @@ var app = new Vue({
       switch(command_split[0].toLowerCase()) {
         case "h":
         case "help":
-          app.println('Commands: (s)end, (a)dd, (r)emove, (i)nfo, (q)uit', false, YELLOW);
+          app.println('Commands: (s)end, (a)dd, (r)emove, (i)nfo, (ch)ange, (k)ill, (q)uit', false, YELLOW);
           break;
         case "cl":
         case "clear":
@@ -124,13 +148,14 @@ var app = new Vue({
         case "quit":
           bot.stop();
           app.reset();
+          app.focus();
           break;
         case "s":
         case "send":
           if (command_split.length < 3) {
             return app.println('missing fields', false, RED);
           }
-          bot.send(command_split[1], command_split.splice(2).join(' '));
+          send(command_split[1], command_split.splice(2).join(' '));
           break;
         case "a":
         case "add":
@@ -138,6 +163,13 @@ var app = new Vue({
             return app.println('missing fields', false, RED);
           }
           bot.add(command_split[1]);
+          break;
+        case "c":
+        case "create":
+          if (command_split.length < 3) {
+            return app.println('missing fields', false, RED);
+          }
+          bot.create(command_split[1], command_split[2]);
           break;
         case "i":
         case "info":
@@ -150,13 +182,44 @@ var app = new Vue({
           }
           bot.remove(command_split[1]);
           break;
+
+        case "enc":
+        case "encrypt":
+          if (command_split.length < 3) {
+            return app.println('missing fields', false, RED);
+          }
+          encMap[command_split[1]] = command_split[2];
+          break;
+        case "dec":
+        case "decrypt":
+          if (command_split.length < 3) {
+            return app.println('missing fields', false, RED);
+          }
+          decMap[command_split[1]] = command_split[2];
+          break;
+        case "k":
+        case "kill":
+          if (command_split.length < 2) {
+            return app.println('missing fields', false, RED);
+          }
+          bot.kill(command_split[1]);
+          break;
+        case "ch":
+        case "change":
+          if (command_split.length < 3) {
+            return app.println('missing fields', false, RED);
+          }
+          bot.change(command_split[1], command_split[2]);
+          break;
         // command not found
         default:
           app.println('-botsilo: ' + command_split[0] + ": command not found", false, RED);
       }
     },
-    println: (text, from, color) => {
-        app.lines.push({text: text, from: from, color: color});
+    println: (text, from, color, displayTime) => {
+        var line = {text: text, from: from, color: color};
+        if (displayTime) line.time = moment().format("H:mm:ss");
+        app.lines.push(line);
         //app.scrollDown();
     },
     setColors: (bg, c) => {
@@ -174,12 +237,24 @@ var app = new Vue({
 });
 
 
+// override default host and port with query parameters
 var host = getParameterByName('host');
 var port = getParameterByName('port');
-
 if (host) app.host = host;
 if (port) app.port = parseInt(port);
 
+
+function send(id, text) {
+  if (id in encMap) {
+    encrypt(encMap[id], text).then(ciphertext => {
+      bot.send(id, ciphertext);
+    }).catch(err => {
+      app.println(err.message, false, RED);
+    });
+  } else {
+    bot.send(id, text);
+  }
+}
 
 function checkKey(e) {
   if (!app.online) return;

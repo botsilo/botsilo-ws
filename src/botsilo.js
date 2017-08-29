@@ -45,7 +45,7 @@ function Bot(host, port, botId, secret, on_connect, on_disconnect, on_message) {
     }
 
     function doFail(e) {
-      alert("Unable to connect to Toby");
+      alert("Unable to connect to Botsilo");
       on_disconnect();
     }
 
@@ -123,6 +123,40 @@ function Bot(host, port, botId, secret, on_connect, on_disconnect, on_message) {
   this.remove = function(id) {
     var request = new Paho.MQTT.Message(JSON.stringify({id:id}));
     request.destinationName = "server/" + botId + "/remove";
+    client.send(request);
+  }
+
+  /**
+   * info - get bot information
+   *
+   * @param  {String} ack  the ack tag
+   */
+  this.kill = function(sk) {
+    var request = new Paho.MQTT.Message(JSON.stringify({sk:sk}));
+    request.destinationName = "server/" + botId + "/kill";
+    client.send(request);
+  }
+
+  /**
+   * info - get bot information
+   *
+   * @param  {String} ack  the ack tag
+   */
+  this.change = function(oldSk, newSk) {
+    var request = new Paho.MQTT.Message(JSON.stringify({oldSk: oldSk, newSk: newSk}));
+    request.destinationName = "server/" + botId + "/change";
+    client.send(request);
+  }
+
+  /**
+   * create - create bot
+   *
+   * @param  {String} id
+   * @param  {String} sk
+   */
+  this.create = function(id, sk) {
+    var request = new Paho.MQTT.Message(JSON.stringify({id:id, sk:sk}));
+    request.destinationName = "server/" + botId + "/create";
     client.send(request);
   }
 
